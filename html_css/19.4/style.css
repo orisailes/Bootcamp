@@ -69,8 +69,7 @@ body {
   margin-left: 20px;
   position: absolute;
   top: 0;
-  animation: jump 0.5s infinite;
-  animation-direction:alternate ;
+  animation-direction: alternate;
 }
 
 .dot-4,
@@ -84,7 +83,7 @@ body {
   top: 0;
   left: 0;
   position: absolute;
-  animation: coloring 0.4s infinite;
+  animation: coloring 0.4s infinite ease-out;
   animation-direction: alternate;
   animation-delay: 2s;
 }
@@ -92,15 +91,15 @@ body {
 /* positioning fix & delays */
 
 .dot-1 {
-  animation-delay: 1s;
+  animation: jump 4s infinite;
 }
 .dot-2 {
-  animation-delay: 2s;
   left: -50px;
+  animation: jump2 4s infinite;
 }
 .dot-3 {
   left: -100px;
-  animation-delay: 3s;
+  animation: jump3 4s infinite;
 }
 .dot-5 {
   left: -50px;
@@ -118,9 +117,50 @@ body {
 }
 
 @keyframes jump {
-  100% {
+  0% {
+    transform: translate(0);
+  }
+  /* going up */
+  25% {
     transform: translateY(-20px);
-    background: rgba(13, 219, 192, 0.747);
+  }
+  /* going down */
+  50% {
+    transform: translate(0);
+  }
+
+  100% {
+    transform: translate(0);
+  }
+}
+@keyframes jump2 {
+  25% {
+    transform: translate(0);
+  }
+  /* going up */
+  50% {
+    transform: translateY(-20px);
+  }
+  /* going down */
+  75% {
+    transform: translate(0);
+  }
+}
+@keyframes jump3 {
+  25% {
+    transform: translate(0);
+  }
+
+  50% {
+    transform: translate(0);
+  }
+  /* going up */
+  75% {
+    transform: translateY(-20px);
+  }
+  /* going down */
+  100% {
+    transform: translate(0);
   }
 }
 
