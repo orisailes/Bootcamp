@@ -83,9 +83,7 @@ body {
   top: 0;
   left: 0;
   position: absolute;
-  animation: coloring 0.4s infinite ease-out;
-  animation-direction: alternate;
-  animation-delay: 2s;
+  animation: coloring 2s infinite ease-in-out;
 }
 
 /* positioning fix & delays */
@@ -103,9 +101,12 @@ body {
 }
 .dot-5 {
   left: -50px;
+  animation-delay: 0.5s;
+  
 }
-.dot-6 {
+.dot-4 {
   left: -100px;
+  animation-delay: 0.75s;
 }
 
 /*  animate keyframs */
@@ -165,7 +166,7 @@ body {
 }
 
 @keyframes coloring {
-  100% {
-    background: rgba(13, 219, 192, 0.747);
+ 50% {
+    background-color: rgba(13, 219, 192, 0.747);
   }
 }
