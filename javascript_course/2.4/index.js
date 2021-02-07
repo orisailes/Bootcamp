@@ -15,5 +15,5 @@ var months = ['January', 'Febuary', 'March', 'April', 'May', 'June', 'July' , 'E
 
 console.log(`The day is ${days[dayNumber]}`)
 console.log(`The day in month is ${date}`)
-console.log(`The month is ${months[month + 1]}`)
+console.log(`The month is ${months[month]}`)
 console.log(`The year is ${year}`)
