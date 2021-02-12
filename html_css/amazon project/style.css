@@ -14,6 +14,7 @@
   --amazon-orange-btn-hover-color: #e4be5f;
   --green-links: #007185;
   --green-hovering-links: #c7511f;
+  --price-color:#c7511f;
 }
 
 /* Utiities */
@@ -73,13 +74,163 @@ ul li {
   align-self: center;
 }
 
+/* hovering product animation */
+
+.left-product ul li:nth-child(1):hover::after {
+  background: url(./img/product__page/hovering/black-1.jpg) no-repeat;
+  background-size: 100% 100%;
+  width: 30%;
+  height: 100%;
+  content: "";
+  z-index: 100;
+  position: absolute;
+  animation: come 0.4s forwards;
+  transform: translateX(-500px);
+  opacity: 0;
+}
+
+.left-product ul li:nth-child(2):hover::after {
+  background: url(./img/product__page/hovering/black-2.jpg) no-repeat;
+  background-size: 100% 100%;
+  width: 30%;
+  height: 100%;
+  content: "";
+  z-index: 100;
+  position: absolute;
+  top: 18vh;
+  animation: come 0.4s forwards;
+  transform: translateX(-500px);
+  opacity: 0;
+}
+
+.left-product ul li:nth-child(3):hover::after {
+  background: url(./img/product__page/hovering/black-3.jpg) no-repeat;
+  background-size: 100% 100%;
+  width: 30%;
+  height: 100%;
+  content: "";
+  z-index: 100;
+  position: absolute;
+  top: 18vh;
+  animation: come 0.4s forwards;
+  transform: translateX(-500px);
+  opacity: 0;
+}
+
+.left-product ul li:nth-child(4):hover::after {
+  background: url(./img/product__page/hovering/black-4.jpg) no-repeat;
+  background-size: 100% 100%;
+  width: 30%;
+  height: 100%;
+  content: "";
+  z-index: 100;
+  position: absolute;
+  top: 18vh;
+  animation: come 0.4s forwards;
+  transform: translateX(-500px);
+  opacity: 0;
+}
+
+.left-product ul li:nth-child(5):hover::after {
+  background: url(./img/product__page/hovering/black-5.jpg) no-repeat;
+  background-size: 100% 100%;
+  width: 30%;
+  height: 100%;
+  content: "";
+  z-index: 100;
+  position: absolute;
+  top: 18vh;
+  animation: come 0.4s forwards;
+  transform: translateX(-500px);
+  opacity: 0;
+}
+
+.left-product ul li:nth-child(6):hover::after {
+  background: url(./img/product__page/hovering/black-6.jpg) no-repeat;
+  background-size: 100% 100%;
+  width: 30%;
+  height: 100%;
+  content: "";
+  z-index: 100;
+  position: absolute;
+  top: 18vh;
+  animation: come 0.4s forwards;
+  transform: translateX(-500px);
+  opacity: 0;
+}
+
+@keyframes come {
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* colors option animation */
+.grid-color-options div:nth-child(1):hover::after {
+  background: url(./img/product__page/hovering/red-1.jpg) no-repeat;
+  background-size: 100% 100%;
+  width: 30%;
+  height: 100%;
+  content: "";
+  z-index: 100;
+  position: absolute;
+  top: 18vh;
+  left: 4vw;
+}
+.grid-color-options div:nth-child(2):hover::after {
+  background: url(./img/product__page/hovering/green-1.jpg) no-repeat;
+  background-size: 100% 100%;
+  width: 30%;
+  height: 100%;
+  content: "";
+  z-index: 100;
+  position: absolute;
+  top: 18vh;
+  left: 4vw;
+}
+.grid-color-options div:nth-child(3):hover::after {
+  background: url(./img/product__page/hovering/blue-1.jpg) no-repeat;
+  background-size: 100% 100%;
+  width: 30%;
+  height: 100%;
+  content: "";
+  z-index: 100;
+  position: absolute;
+  top: 18vh;
+  left: 4vw;
+}
+.grid-color-options div:nth-child(4):hover::after {
+  background: url(./img/product__page/hovering/black-1.jpg) no-repeat;
+  background-size: 100% 100%;
+  width: 30%;
+  height: 100%;
+  content: "";
+  z-index: 100;
+  position: absolute;
+  top: 18vh;
+  left: 4vw;
+}
+.grid-color-options div:nth-child(5):hover::after {
+  background: url(./img/product__page/hovering/gray-1.jpg) no-repeat;
+  background-size: 100% 100%;
+  width: 30%;
+  height: 100%;
+  content: "";
+  z-index: 100;
+  position: absolute;
+  top: 18vh;
+  left: 4vw;
+}
+
 /* navbar */
 .navbar {
-  height: 10vh;
+  height: 8vh;
   background: var(--navbar-color);
   display: flex;
   justify-content: space-between;
   align-items: center;
+  font-size: 0.8rem;
 }
 
 .navbar .logo img {
@@ -139,10 +290,10 @@ ul li {
 .navbar2 {
   background: var(--navbar2-color);
   display: flex;
-  justify-content: space-evenly;
-  height: 5vh;
+  justify-content: space-between;
+  height: 4vh;
   align-items: center;
-  font-size: 1.1rem;
+  font-size: 0.8rem;
 }
 
 .navbar2 ul {
@@ -157,6 +308,7 @@ ul li {
 
 .right-side-list {
   justify-self: flex-end;
+  margin-right: 1rem;
 }
 
 /* current location */
@@ -176,14 +328,14 @@ ul li {
   grid-template-columns: 3fr 3fr 2fr;
   height: 100vh;
   grid-gap: 1rem;
+  border-bottom: 1px dotted gray;
 }
 
 .product > div {
-  border: 1px solid black;
   margin: 0 1rem;
 }
 
-/* left side */
+/* left side product*/
 
 .left-product {
   display: flex;
@@ -196,15 +348,18 @@ ul li {
   margin-bottom: 1rem;
   display: inline;
 }
-.left-product ul li img:hover {
+.left-product ul li a:hover,
+.left-product ul li a:focus {
   opacity: 0.8;
+  filter: drop-shadow(1px 1px 4px var(--amazon-orange-color));
 }
+
 .left-product .image-hovering img {
   height: 90vh;
   margin-left: 1rem;
 }
 
-/* center */
+/* center product */
 .product {
   line-height: 1.8rem;
 }
@@ -290,12 +445,13 @@ ul li {
 }
 
 /* section right side */
-.share {
+.share,
+.advertise {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border: 1px solid grey;
+  border: 1px solid rgba(128, 128, 128, 0.6);
   border-radius: 5px;
 }
 .down-arrow {
@@ -310,22 +466,71 @@ ul li {
 }
 
 .sell,
-.advertise{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    text-align: center;
+.advertise {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
 }
-.sell h5{
-    margin-top: 1rem;
+.sell h5 {
+  margin-top: 1rem;
 }
-.sell .shareUs a, i{
-    padding: 0.2rem;
-    
+.sell .shareUs a,
+i {
+  padding: 0.2rem;
 }
-.sell .shareUs a:hover{
-    padding: 0.2rem;
-    
+.sell .shareUs a:hover {
+  padding: 0.2rem;
 }
 
+/* carusella section */
+.carusella {
+  height: 50vh;
+}
+
+.carusella img {
+  height: 50%;
+  width: 150px;
+}
+
+.carusella-1,
+.carusella-2 {
+  height: 300px;
+  width: 70%;
+  border-bottom: 1px dotted gray;
+  margin: auto;
+  overflow-x: scroll;
+  display: flex;
+}
+
+.carusella-2 {
+  margin-top: 2rem;
+}
+
+.carusella-1 > div,
+.carusella-2 > div {
+  display: flex;
+  flex-direction: column;
+  margin-right: 2rem;
+  margin-left: 2rem;
+  text-align: center;
+}
+
+.carusella a {
+  color: var(--green-links);
+  margin-top: 0.1rem;
+  line-height: 1.3rem;
+}
+
+.rating-carusella img {
+  height: 10px;
+  width: 50px;
+}
+.rating-carusella i {
+  height: 5px;
+  width: 15px;
+}
+.rating-carusella p {
+  color: var(--price-color);
+}
