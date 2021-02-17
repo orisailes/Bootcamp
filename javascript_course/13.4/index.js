@@ -5,7 +5,7 @@
 // spaces on the right hand side if empty!
 
 function myFunc(N){
-    for(let i=0; i<=N ;i++){
+    for(let i=1; i<=N ;i++){
 
         console.log(`#`.repeat(i))  
 
