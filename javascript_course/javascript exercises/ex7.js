@@ -8,19 +8,53 @@
 
 //! the logging is comment for your comfortable.
 
-let array = [11, 2, 4, 80, 8, 63, 10, 122, 5342, 0, 23]
+const originalArray = [4, 2, 67, 53, 2, 675, 523, 13, 9, 0, 232];
 
-array.forEach(element => {
-    // console.log(`Hi! i am : ${element} and i just multiply by 2 :${element*2}`);
+// my filter function - filter ther array to number who biiger than 6
+
+function myFilter(array) {
+    let newArray = [];
+    for (let i = 0; i < array.length; i++) {
+        if (array[i] > 6) {
+            newArray.push(array[i])
+        }
+    }
+    return newArray;
+}
+
+// console.log(myFilter(originalArray))
+
+originalArray.forEach(element => {
+    
 });
 
-const highest = array.filter(function (number) {
-    return number>99?`Ori filtered me, i am one of highest number here muhaha! i'm: ${number}`:``;
-})
-// console.log(highest)
 
-const mistery = array.map(function (number) {
-    return [String.fromCharCode(number),`<< my ascii code! (im ${number})`]
-})
+//forEach function
+function myForEach(array){
 
-// console.log(mistery)
+    let obj = {};
+
+    for(let i=0;i<array.length;i++){
+        obj[i] = array[i];
+    }
+
+    return obj ;
+
+}
+
+//! returning the index and their value of the array as well as the array itself like foreach does.
+const x = myForEach(originalArray);
+// console.log(x)
+
+
+//Map function - new array of only even numbers
+
+function myMap(array){
+    let myMapArray = [];
+    for(let i of array){
+        i%2===0?myMapArray.push(i):null;
+    }
+
+    return myMapArray;
+}
+// console.log(myMap(originalArray));
