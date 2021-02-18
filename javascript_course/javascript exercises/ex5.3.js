@@ -6,14 +6,17 @@
 // toCamelCase("the-stealth-warrior") // returns "theStealthWarrior"
 // toCamelCase("The_Stealth_Warrior") // returns "TheStealthWarrior
 
+
 function toCamelCase(string){
     string = string.split('');
+    string[0] = string[0].toUpperCase();
     for(let x=0;x<string.length;x++){
         if(string[x]=== `-` || string[x]===`_`){
             string[x+1]=string[x+1].toUpperCase();
             delete string[x];
         }
     }
+    
     return string.join('');
 }
 
