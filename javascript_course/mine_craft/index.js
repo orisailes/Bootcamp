@@ -7,8 +7,8 @@ goBtn.addEventListener('click', showGo)
 const rules = document.querySelector(`.rules`)
 const startGame = document.querySelector(`.start-game`)
 startGame.addEventListener('click', showWorld)
-
-
+let randomRock = Math.floor(Math.random() * 2)
+let newItems=[];
 
 // pop up display
 function showGo() {
@@ -43,9 +43,9 @@ function makeSky() {
     for (let ro = 0; ro < 18; ro++) {
         for (let col = 0; col < 25; col++) {
             let skyDiv = document.createElement(`div`)
-            skyDiv.classList.add(`sky`)
             skyDiv.setAttribute(`data-row`, `${ro}`)
             skyDiv.setAttribute('data-col', `${col}`)
+            skyDiv.classList.add(`sky`)
             skyDiv.style.background = `url(./img/blocks/sky.jpg)`
             skyDiv.addEventListener('click', handleClick)
             world.appendChild(skyDiv)
@@ -118,18 +118,19 @@ function makeCloud(x, y) {
 }
 
 function makeTallGrass() {
+    debugger;
     let start = document.querySelector(`[data-row="17"][data-col="0"]`)
     for (let i = 0; i < 12; i++) {
-        const randomGrass = Math.floor(Math.random() * 25)
+        let randomGrass = Math.floor(Math.random() * 25)
         let start = document.querySelector(`[data-row="17"][data-col="${randomGrass}"]`)
-        start.style.background = `url(./img/blocks/tall_grass.jpg)`;
+        start.style.background = `url(./img/blocks/tallGrass.jpg)`;
         start.classList.remove(`sky`);
         start.classList.add(`tallGrass`);
     }
 }
 
+
 function makeRock() {
-    let randomRock = Math.floor(Math.random() * 2)
     if (randomRock === 1) {
         for (let i = 0; i < 7; i++) {
             for (let x = 0; x < 7 - i; x++) {
@@ -217,7 +218,7 @@ function gameNavClick(e) {
         case `grass`:
             canUserPut(`grass`)
             break;
-        case `tall_grass`:
+        case `tallGrass`:
             canUserPut(`tallGrass`)
             break;
         case `tree`:
@@ -229,12 +230,12 @@ function gameNavClick(e) {
         case `wood`:
             canUserPut(`wood`)
             break;
+
     }
 }
 
 //check if the user got sources
 function canUserPut(element) {
-
     document.body.style.cursor = "auto";
     axeClicked = false;
     shovelClicked = false;
@@ -247,19 +248,14 @@ function canUserPut(element) {
     inventoryItems.wood.action = false
     if (inventoryItems[element].qty > 0) {
         inventoryItems[element].action = true
-        userBuild(element)                    // send to bulding function
+        userBuild(element) // send to bulding function
     }
 }
 
 
-//reset game
-function resetGame() {
-
-}
 
 //check if user remove was valid
 function isSkyAboveMe(element) {
-    // debugger;
     let row = Number(element.getAttribute(`data-row`))
     let col = Number(element.getAttribute(`data-col`))
     let testUp = document.querySelector(`[data-row="${row-1}"][data-col="${col}"]`)
@@ -340,16 +336,58 @@ function handleClick(element) {
 
 //handle user build
 function userBuild(el) {
-    console.log(`triggered`,el)
-    
+    if (inventoryItems[el].qty == 0) {
+        inventoryItems[el].active == false;
+
+    }
+    worldDivs.forEach(element => {
+        element.addEventListener(`click`, function (element) {
+            let overlayBuild = element.currentTarget;
+            if (inventoryItems[el].qty > 0) {
+                overlayBuild.style.background = `url(./img/blocks/${el}.jpg)`
+                overlayBuild.removeAttribute(`class`)
+                overlayBuild.classList.add(`${el}`)
+                inventoryItems[el].qty--;
+                console.log(el)
+                document.querySelector(`#${el}`).children[1].textContent = `${inventoryItems[el].qty}`
+                newItems.push(overlayBuild)
+            }
+        })
+    });
+
+
+
 }
 
+//reset game
+function resetGame() {
+    inventoryBlocks.forEach(function(el,i){
+        inventoryBlocks[i].children[1].textContent="0"
+    });
+    for(let item in inventoryItems){
+        inventoryItems[item].qty=0;
+    };
+    newItems.forEach(function(e,i){
+        let row=newItems[i].getAttribute(`data-row`);
+        let col=newItems[i].getAttribute(`data-col`);
+        let suspect = document.querySelector(`[data-row="${row}"][data-col="${col}"]`)
+        suspect.classList.add(`sky`)
+        suspect.style.background = `url(./img/blocks/sky.jpg)`
+    })
+    makeSky();
+    makeRock();
+    makeTree();
+    makeMud();
+    makeGrass();
+
+}
 
 
 //world
 const resetGameButton = document.querySelector(`.reset-game`)
 resetGameButton.addEventListener('click', resetGame)
 let world = document.querySelector(`.world`)
+
 let gameNavUls = document.querySelectorAll(`.game-nav ul`)
 gameNavUls.forEach(element => {
     element.addEventListener('click', gameNavClick)
@@ -403,5 +441,7 @@ let inventoryBlocksImg = document.querySelectorAll(`.inventory img`)
 
 //first world initiallize
 makeWorld()
-
+let worldDivs = document.querySelectorAll(`.world > div`)
 //handle the block building event
+
+
