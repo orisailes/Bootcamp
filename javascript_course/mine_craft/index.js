@@ -7,8 +7,9 @@ goBtn.addEventListener('click', showGo)
 const rules = document.querySelector(`.rules`)
 const startGame = document.querySelector(`.start-game`)
 startGame.addEventListener('click', showWorld)
-let randomRock = Math.floor(Math.random() * 2)
-let newItems=[];
+//! world variables below
+
+
 
 // pop up display
 function showGo() {
@@ -18,7 +19,7 @@ function showGo() {
 }
 
 
-//game display
+// game display
 function showWorld() {
     hero.style.display = "none"
 }
@@ -28,12 +29,8 @@ function makeWorld() {
     makeSky()
     makeGrass()
     makeMud()
-    let randomMapPlaceY = Math.floor(Math.random() * (5) + 5);
-    let randomMapPlaceX = Math.floor(Math.random() * 4 + 4);
     makeCloud(randomMapPlaceX, randomMapPlaceY);
-    randomMapPlaceY = randomMapPlaceY + 6
-    randomMapPlaceX = randomMapPlaceX + 14
-    makeCloud(randomMapPlaceX, randomMapPlaceY);
+    makeCloud(randomMapPlaceXTwo, randomMapPlaceYTwo);
     makeTallGrass()
     makeRock()
     makeTree()
@@ -118,13 +115,10 @@ function makeCloud(x, y) {
 }
 
 function makeTallGrass() {
-    debugger;
-    let start = document.querySelector(`[data-row="17"][data-col="0"]`)
-    for (let i = 0; i < 12; i++) {
-        let randomGrass = Math.floor(Math.random() * 25)
-        let start = document.querySelector(`[data-row="17"][data-col="${randomGrass}"]`)
+    for (let i = 0; i < 11; i++) {
+        let start = document.querySelector(`[data-row="17"][data-col="${tallGrassPlaces[i]}"]`)
         start.style.background = `url(./img/blocks/tallGrass.jpg)`;
-        start.classList.remove(`sky`);
+        start.removeAttribute(`class`);
         start.classList.add(`tallGrass`);
     }
 }
@@ -250,6 +244,13 @@ function canUserPut(element) {
         inventoryItems[element].action = true
         userBuild(element) // send to bulding function
     }
+    if (inventoryItems[element].qty == 0) {
+        document.querySelector(`#${element}`).classList.add(`redding`)
+        setTimeout(function () {
+            document.querySelector(`#${element}`).classList.remove('redding');
+        },2000);
+
+    }
 }
 
 
@@ -275,6 +276,7 @@ function isSkyAboveMe(element) {
 
 // handle user clicking on world
 function handleClick(element) {
+    console.log(element.currentTarget.getAttribute(`class`))
     switch (element.currentTarget.getAttribute(`class`)) {
         case `grass`:
             if (tools.shovelClicked == true && isSkyAboveMe(element.currentTarget)) {
@@ -283,7 +285,7 @@ function handleClick(element) {
                 element.currentTarget.classList.add(`sky`)
                 inventoryItems.grass.qty++
                 inventoryBlocks[0].children[1].textContent = `${inventoryItems.grass.qty}`
-            }
+            }else{console.log(document.querySelector(`#${element.currentTarget.getAttribute(`class`)}`))}
             break;
         case `mud`:
             if (tools.shovelClicked == true && isSkyAboveMe(element.currentTarget)) {
@@ -338,7 +340,6 @@ function handleClick(element) {
 function userBuild(el) {
     if (inventoryItems[el].qty == 0) {
         inventoryItems[el].active == false;
-
     }
     worldDivs.forEach(element => {
         element.addEventListener(`click`, function (element) {
@@ -361,27 +362,81 @@ function userBuild(el) {
 
 //reset game
 function resetGame() {
-    inventoryBlocks.forEach(function(el,i){
-        inventoryBlocks[i].children[1].textContent="0"
+    inventoryBlocks.forEach(function (el, i) {
+        inventoryBlocks[i].children[1].textContent = "0"
     });
-    for(let item in inventoryItems){
-        inventoryItems[item].qty=0;
+    for (let item in inventoryItems) {
+        inventoryItems[item].qty = 0;
     };
-    newItems.forEach(function(e,i){
-        let row=newItems[i].getAttribute(`data-row`);
-        let col=newItems[i].getAttribute(`data-col`);
+    newItems.forEach(function (e, i) {
+        let row = newItems[i].getAttribute(`data-row`);
+        let col = newItems[i].getAttribute(`data-col`);
         let suspect = document.querySelector(`[data-row="${row}"][data-col="${col}"]`)
         suspect.classList.add(`sky`)
         suspect.style.background = `url(./img/blocks/sky.jpg)`
     })
     makeSky();
-    makeRock();
+    makeTallGrass();
     makeTree();
-    makeMud();
-    makeGrass();
+    makeRock();
+    // makeMud(); //! cant be re-used
+    // makeGrass(); //!cant be re-used
+    //* making grass
+    for (let i = 0; i < 24; i++) {
+        let start = document.querySelector(`[data-row="18"][data-col="${i}"]`)
+        start.style.background = `url(./img/blocks/grass.jpg)`
+        start.removeAttribute(`class`)
+        start.classList.add(`grass`)
+    }
+
+    //*making mud
+    for (let col = 0; col < 24; col++) {
+        for (let row = 0; row < 6; row++) {
+            let start = document.querySelector(`[data-row="${19+row}"][data-col="${col}"]`)
+            start.style.background = `url(./img/blocks/mud.jpg)`
+            start.removeAttribute(`class`)
+            start.classList.add(`mud`)
+        }
+    }
 
 }
 
+//new world button
+function makeNewWorld() {
+
+    //delete all the inner details
+    resetGame()
+
+    //make clear sky
+    for (let row = 0; row < 18; row++) {
+        for (let col = 0; col < 25; col++) {
+            let start = document.querySelector(`[data-row="${row}"][data-col="${col}"]`)
+            start.style.background = `url(./img/blocks/sky.jpg)`;
+            start.removeAttribute(`class`);
+            start.classList.add(`sky`);
+        }
+    }
+
+    //!re-random the location
+
+    //random rock
+    randomRock = Math.floor(Math.random() * 2)
+
+    // randomize columns in tallGrassPlaces
+    for (let i = 0; i < 11; i++) {
+        tallGrassPlaces[i] = Math.floor(Math.random() * 25);
+    }
+
+    //randomize place for clouds
+    randomMapPlaceY = Math.floor(Math.random() * (5) + 5);
+    randomMapPlaceX = Math.floor(Math.random() * 4 + 4);
+    randomMapPlaceYTwo = randomMapPlaceY + 6
+    randomMapPlaceXTwo = randomMapPlaceX + 14
+
+
+    //make new world
+    makeWorld()
+}
 
 //world
 const resetGameButton = document.querySelector(`.reset-game`)
@@ -396,6 +451,23 @@ let inventoryBlocks = document.querySelectorAll(`.inventory li`)
 inventoryBlocks.forEach(element => {
     element.children[1].textContent = `0`;
 });
+let randomRock = Math.floor(Math.random() * 2)
+let newItems = [];
+let tallGrassPlaces = [];
+let newMapBtn = document.querySelector(`.new-map`)
+newMapBtn.addEventListener(`click`, makeNewWorld)
+
+// randomize columns in tallGrassPlaces
+for (let i = 0; i < 11; i++) {
+    tallGrassPlaces[i] = Math.floor(Math.random() * 25);
+}
+
+//randomize place for clouds
+let randomMapPlaceY = Math.floor(Math.random() * (5) + 5);
+let randomMapPlaceX = Math.floor(Math.random() * 4 + 4);
+let randomMapPlaceYTwo = randomMapPlaceY + 6
+let randomMapPlaceXTwo = randomMapPlaceX + 14
+
 
 
 
@@ -443,5 +515,3 @@ let inventoryBlocksImg = document.querySelectorAll(`.inventory img`)
 makeWorld()
 let worldDivs = document.querySelectorAll(`.world > div`)
 //handle the block building event
-
-
