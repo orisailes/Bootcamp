@@ -3,7 +3,7 @@
     padding: 0;
     margin: 0;
     font-family: Arial, Helvetica, sans-serif;
-    
+
 }
 
 li {
@@ -39,10 +39,21 @@ li {
 
 .btn {
     padding: 1rem 3rem;
+    margin: 1rem;
     background: #005900;
     color: white;
     font-size: 1.2rem;
     opacity: 0.9;
+}
+
+#game .btn-container {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    position: relative;
+    left: 12%;
+    margin-bottom: 0.5rem;
+    
 }
 
 .me {
@@ -143,8 +154,9 @@ li {
     grid-template-rows: repeat(25, 1fr);
     grid-gap: 0;
 }
-.world > div:hover {
-   opacity: 0.8;
+
+.world>div:hover {
+    opacity: 0.8;
 }
 
 .game-nav {
@@ -165,19 +177,17 @@ li {
 }
 
 
-.game-tools {
-
-}
+.game-tools {}
 
 .game-nav .tool img {
-    height: 150px;
-    width: 200px;
+    height: 100px;
+    width: 150px;
     border: 2px solid white;
     cursor: pointer;
     margin-top: 0.4rem;
 }
 
-.game-nav .inventory{
+.game-nav .inventory {
     flex-direction: row;
 }
 
@@ -186,7 +196,8 @@ li {
     border: 2px solid white;
     cursor: pointer;
 }
-.inventory li  {
+
+.inventory li {
     padding: 0.2rem 0.8rem;
 }
 
@@ -199,4 +210,25 @@ li {
     transform: translate(25px, -25px);
     color: white;
     opacity: 0.8;
+}
+
+.redding p{
+    animation: makeRed 1s backwards;
+    transition:color 3s;
+    color: white;
+}
+
+.redding img{
+    animation: makeRed 1s backwards;
+    transition:color 3s;
+    border: 2px solid white;
+}
+
+@keyframes makeRed{
+    50%{
+        color:red;
+    }
+    100%{
+        color:white;
+    }
 }
