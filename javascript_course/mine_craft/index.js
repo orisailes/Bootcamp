@@ -22,6 +22,7 @@ function showGo() {
 // game display
 function showWorld() {
     hero.style.display = "none"
+    document.querySelector(`#game`).style.display = "grid"
 }
 //first initiallize the map
 
@@ -181,12 +182,16 @@ function makeTree() {
 
 //make bollian change in user click
 function gameNavClick(e) {
+
     inventoryItems.mud.action = false
     inventoryItems.grass.action = false
     inventoryItems.tallGrass.action = false
     inventoryItems.rock.action = false
     inventoryItems.tree.action = false
     inventoryItems.wood.action = false
+    tools.shovelClicked = false;
+    tools.picAxeClicked = false;
+    tools.axeClicked = false;
     switch (e.target.alt) {
         case `axe`:
             tools.shovelClicked = false;
@@ -230,6 +235,7 @@ function gameNavClick(e) {
 
 //check if the user got sources
 function canUserPut(element) {
+
     document.body.style.cursor = "auto";
     axeClicked = false;
     shovelClicked = false;
@@ -242,13 +248,13 @@ function canUserPut(element) {
     inventoryItems.wood.action = false
     if (inventoryItems[element].qty > 0) {
         inventoryItems[element].action = true
-        userBuild(element) // send to bulding function
+
     }
     if (inventoryItems[element].qty == 0) {
         document.querySelector(`#${element}`).classList.add(`redding`)
         setTimeout(function () {
             document.querySelector(`#${element}`).classList.remove('redding');
-        },2000);
+        }, 2000);
 
     }
 }
@@ -262,13 +268,17 @@ function isSkyAboveMe(element) {
     let testUp = document.querySelector(`[data-row="${row-1}"][data-col="${col}"]`)
     let testLeft = document.querySelector(`[data-row="${row}"][data-col="${col-1}"]`);
     let testRight = document.querySelector(`[data-row="${row}"][data-col="${col+1}"]`);
-    if (testUp.className === "sky") {
+    let testDown = document.querySelector(`[data-row="${row+1}"][data-col="${col}"]`);
+    if (testUp.className === "sky" || testUp.className === "cloud") {
         return true
     }
-    if (testRight.className === "sky") {
+    if (testRight.className === "sky" || testUp.className === "cloud") {
         return true
     }
-    if (testLeft.className === "sky") {
+    if (testLeft.className === "sky" || testUp.className === "cloud") {
+        return true
+    }
+    if (testDown.className === "sky" || testUp.className === "cloud") {
         return true
     }
 }
@@ -276,7 +286,6 @@ function isSkyAboveMe(element) {
 
 // handle user clicking on world
 function handleClick(element) {
-    console.log(element.currentTarget.getAttribute(`class`))
     switch (element.currentTarget.getAttribute(`class`)) {
         case `grass`:
             if (tools.shovelClicked == true && isSkyAboveMe(element.currentTarget)) {
@@ -285,7 +294,13 @@ function handleClick(element) {
                 element.currentTarget.classList.add(`sky`)
                 inventoryItems.grass.qty++
                 inventoryBlocks[0].children[1].textContent = `${inventoryItems.grass.qty}`
-            }else{console.log(document.querySelector(`#${element.currentTarget.getAttribute(`class`)}`))}
+            };
+            if (tools.shovelClicked == false) {
+                document.querySelectorAll(`.game-nav .tool`)[2].style.animation = "makeBorderRed 1s backwards";
+                setTimeout(function () {
+                    document.querySelectorAll(`.game-nav .tool`)[2].style.animation = null;
+                }, 2000);
+            }
             break;
         case `mud`:
             if (tools.shovelClicked == true && isSkyAboveMe(element.currentTarget)) {
@@ -295,69 +310,97 @@ function handleClick(element) {
                 inventoryItems.mud.qty++
                 inventoryBlocks[1].children[1].textContent = `${inventoryItems.mud.qty}`
             }
+            if (tools.shovelClicked == false) {
+                document.querySelectorAll(`.game-nav .tool`)[2].style.animation = "makeBorderRed 1s backwards";
+                setTimeout(function () {
+                    document.querySelectorAll(`.game-nav .tool`)[2].style.animation = null;
+                }, 2000);
+            }
             break;
         case `tallGrass`:
-            if (tools.shovelClicked == true) {
+            if (tools.shovelClicked == true && isSkyAboveMe(element.currentTarget)) {
                 element.currentTarget.style.background = `url(./img/blocks/sky.jpg)`
                 element.currentTarget.removeAttribute(`class`)
                 element.currentTarget.classList.add(`sky`)
                 inventoryItems.tallGrass.qty++
                 inventoryBlocks[2].children[1].textContent = `${inventoryItems.tallGrass.qty}`
             }
+            if (tools.shovelClicked == false) {
+                document.querySelectorAll(`.game-nav .tool`)[2].style.animation = "makeBorderRed 1s backwards";
+                setTimeout(function () {
+                    document.querySelectorAll(`.game-nav .tool`)[2].style.animation = null;
+                }, 2000);
+            }
             break;
         case `tree`:
-            if (tools.picAxeClicked == true) {
+            if (tools.picAxeClicked == true && isSkyAboveMe(element.currentTarget)) {
                 element.currentTarget.style.background = `url(./img/blocks/sky.jpg)`
                 element.currentTarget.removeAttribute(`class`)
                 element.currentTarget.classList.add(`sky`)
                 inventoryItems.tree.qty++
                 inventoryBlocks[3].children[1].textContent = `${inventoryItems.tree.qty}`
             }
+            if (tools.picAxeClicked == false) {
+                document.querySelectorAll(`.game-nav .tool`)[1].style.animation = "makeBorderRed 1s backwards";
+                setTimeout(function () {
+                    document.querySelectorAll(`.game-nav .tool`)[1].style.animation = null;
+                }, 2000);
+            }
             break;
         case `wood`:
-            if (tools.picAxeClicked == true) {
+            if (tools.picAxeClicked == true && isSkyAboveMe(element.currentTarget)) {
                 element.currentTarget.style.background = `url(./img/blocks/sky.jpg)`
                 element.currentTarget.removeAttribute(`class`)
                 element.currentTarget.classList.add(`wood`)
                 inventoryItems.wood.qty++
                 inventoryBlocks[4].children[1].textContent = `${inventoryItems.wood.qty}`
             }
+            if (tools.picAxeClicked == false) {
+                document.querySelectorAll(`.game-nav .tool`)[1].style.animation = "makeBorderRed 1s backwards";
+                setTimeout(function () {
+                    document.querySelectorAll(`.game-nav .tool`)[1].style.animation = null;
+                }, 2000);
+            }
             break;
         case `rock`:
-            if (tools.axeClicked == true) {
+            if (tools.axeClicked == true && isSkyAboveMe(element.currentTarget)) {
                 element.currentTarget.style.background = `url(./img/blocks/sky.jpg)`
                 element.currentTarget.removeAttribute(`class`)
                 element.currentTarget.classList.add(`sky`)
                 inventoryItems.rock.qty++
                 inventoryBlocks[5].children[1].textContent = `${inventoryItems.rock.qty}`
             }
-            break;
-    }
-}
-
-
-//handle user build
-function userBuild(el) {
-    if (inventoryItems[el].qty == 0) {
-        inventoryItems[el].active == false;
-    }
-    worldDivs.forEach(element => {
-        element.addEventListener(`click`, function (element) {
-            let overlayBuild = element.currentTarget;
-            if (inventoryItems[el].qty > 0) {
-                overlayBuild.style.background = `url(./img/blocks/${el}.jpg)`
-                overlayBuild.removeAttribute(`class`)
-                overlayBuild.classList.add(`${el}`)
-                inventoryItems[el].qty--;
-                console.log(el)
-                document.querySelector(`#${el}`).children[1].textContent = `${inventoryItems[el].qty}`
-                newItems.push(overlayBuild)
+            if (tools.axeClicked == false) {
+                document.querySelectorAll(`.game-nav .tool`)[0].style.animation = "makeBorderRed 1s backwards";
+                setTimeout(function () {
+                    document.querySelectorAll(`.game-nav .tool`)[0].style.animation = null;
+                }, 2000);
             }
-        })
-    });
-
-
-
+            break;
+            //user building
+        default:
+            let block = "";
+            for (let i = 0; i < 6; i++) {
+                blockName = Object.keys(inventoryItems)[i];
+                blockValue = Object.values(inventoryItems)[i];
+                if (blockValue.action == true) {
+                    if (blockValue.qty == 0) {
+                        blockValue.action = false;
+                        document.querySelector(`#${blockName}`).classList.add(`redding`)
+                        setTimeout(function () {
+                            document.querySelector(`#${blockName}`).classList.remove('redding');
+                        }, 1000);
+                    } else {
+                        element.currentTarget.style.background = `url(./img/blocks/${blockName}.jpg)`
+                        element.currentTarget.removeAttribute(`class`)
+                        element.currentTarget.classList.add(`${blockName}`)
+                        blockValue.qty--
+                        document.querySelector(`#${blockName}`).children[1].textContent = `${inventoryItems[blockName].qty}`
+                        newItems.push(element.currentTarget)
+                    }
+                }
+            }
+    }
 }
 
 //reset game
@@ -507,9 +550,6 @@ let inventoryItems = {
 }
 
 let inventoryBlocksImg = document.querySelectorAll(`.inventory img`)
-// inventoryBlocksImg.addEventListener('click', userBuild)
-
-
 
 //first world initiallize
 makeWorld()
