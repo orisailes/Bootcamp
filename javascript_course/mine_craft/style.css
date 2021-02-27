@@ -10,6 +10,13 @@ li {
     list-style: none;
 }
 
+/* throw mobiles */
+#throw {
+    display: none;
+    height: 100vh;
+    background: url(./img/background/background.jpg)no-repeat center center/cover;
+}
+
 /* landing page */
 
 #landing-page {
@@ -53,7 +60,7 @@ li {
     position: relative;
     left: 12%;
     margin-bottom: 0.5rem;
-    
+
 }
 
 .me {
@@ -142,9 +149,11 @@ li {
 /* world  */
 
 #game {
+
     display: grid;
     grid-template-columns: 3fr 1fr;
     height: 100vh;
+    display: none;
 }
 
 .world {
@@ -174,17 +183,20 @@ li {
     flex-direction: column;
     align-self: center;
     justify-content: center;
+    margin-top: 1rem
 }
 
 
-.game-tools {}
+
+.game-nav .tool {
+    border: 2px solid white;
+}
 
 .game-nav .tool img {
     height: 100px;
     width: 150px;
-    border: 2px solid white;
     cursor: pointer;
-    margin-top: 0.4rem;
+
 }
 
 .game-nav .inventory {
@@ -212,23 +224,29 @@ li {
     opacity: 0.8;
 }
 
-.redding p{
+.redding p {
     animation: makeRed 1s backwards;
-    transition:color 3s;
+    transition: color 3s;
     color: white;
 }
 
-.redding img{
-    animation: makeRed 1s backwards;
-    transition:color 3s;
-    border: 2px solid white;
+
+@keyframes makeRed {
+    50% {
+        color: red;
+    }
+
+    100% {
+        color: white;
+    }
 }
 
-@keyframes makeRed{
-    50%{
-        color:red;
+@keyframes makeBorderRed {
+    50% {
+        background: red;
     }
-    100%{
-        color:white;
+
+    100% {
+        background: none;
     }
 }
