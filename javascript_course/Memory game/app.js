@@ -161,6 +161,7 @@ function startTimer(seconds, timerVar) {
 
 
 function resetGame() {
+  document.querySelector(`.heading`).innerHTML=`<h1>Memory Game! <small><br>By team Seven</small> </h1>`
   init();
 }
 
