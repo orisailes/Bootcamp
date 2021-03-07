@@ -78,6 +78,12 @@ span {
     color: black;
     font-size: 1.2rem;
 }
+.incurrect-guesses{
+    color: red;
+}
+.currect-guesses{
+    color: green;
+}
 
 .grid-container {
     display: grid;
