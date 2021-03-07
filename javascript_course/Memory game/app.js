@@ -75,15 +75,16 @@ function wait(delayTime) {
   return new Promise((resolve) => setTimeout(resolve, delayTime));
 }
 
-//add addEventListener
+function cardEvent(e) {
+  if (e.target.className.includes(`grid-container`) == false) {
+    let elmCard = e.target;
+    cardClicked(elmCard)
+  };
+}
+
 function setEventListener() {
-  container.addEventListener('click', (e) => {
-    if (e.target.className.includes(`grid-container`) == false) {
-      let elmCard = e.target;
-      console.log(e.target)
-      cardClicked(elmCard)
-    };
-  });
+  container.addEventListener('click', cardEvent)
+
 }
 
 async function cardClicked(card) {
@@ -108,7 +109,9 @@ async function cardClicked(card) {
       console.log(card);
       console.log(elmPreviousCard);
       state.numberOfWrongGuesses++
+      container.removeEventListener(`click`, cardEvent)
       await wait(800)
+      setEventListener()
       elmPreviousCard.classList.remove('flipped');
       card.classList.remove('flipped');
       elmPreviousCard.classList.add('bg');
