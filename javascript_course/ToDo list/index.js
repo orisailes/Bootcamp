@@ -9,6 +9,7 @@ const checkBox = [];
 const userTask = [];
 let deleteIcon;
 let editIcon;
+let helperBools=[];
 const today = new Date();
 const time = `${today.getDate()}/${today.getMonth()+1}/${today.getFullYear()} at ${today.getHours()}:${today.getMinutes()}`
 let id = 0;
@@ -60,6 +61,8 @@ function handleCheck(e) {
     } else {
         document.getElementById(`${thisId}`).classList.remove(`done`);
     }
+    window.localStorage.setItem(`state`, JSON.stringify(state))
+
 }
 
 function deleteTask(e) {
@@ -77,6 +80,7 @@ function deleteTask(e) {
         myUl.children[i].children[0].children[1].setAttribute(`id`, i);
     }
     id = myUl.children.length;
+    window.localStorage.setItem(`state`, JSON.stringify(state))
 }
 
 function editTask(e) {
@@ -85,6 +89,7 @@ function editTask(e) {
     state.currentSpan = e.path[2].children[0].children[1];
     state.currentSpanID = Number(state.currentSpan.id);
     updateInput.value = state.currentSpan.textContent
+    window.localStorage.setItem(`state`, JSON.stringify(state))
 }
 
 function updateTask(e) {
@@ -94,14 +99,20 @@ function updateTask(e) {
         userTask[state.currentSpanID].text = state.currentSpan.textContent
     }
     state.currentSpan.textContent = updateInput.value;
-
+    window.localStorage.setItem(`state`, JSON.stringify(state))
 }
 
 //if window got data
-if(window.localStorage){
+if (window.localStorage) {
     data = JSON.parse(localStorage.state)
-    data.userTask.forEach((e)=>{
-        input.value=e.text;
-        inputBtn.click()
+    data.userTask.forEach((e) => {
+        helperBools.push(e.isDone);
+        input.value = e.text;
+        inputBtn.click();
+    })
+    helperBools.forEach((e,i)=>{
+        if(e==true){
+           myUl.children[i].children[0].children[0].click()
+        }
     })
 }
