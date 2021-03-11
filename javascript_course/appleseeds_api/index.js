@@ -1,5 +1,8 @@
+const loader = document.querySelector(`.loader`)
+
 async function fetchData(url) {
     console.time(`check`)
+    loader.classList.remove(`hidden`)
     const respone = await fetch(url)
     const appleData = await respone.json()
     state.bigData.push(appleData)
@@ -15,6 +18,7 @@ async function fetchData(url) {
         })
     }
     firstRender()
+    loader.classList.add(`hidden`)
     console.timeEnd(`check`)
 }
 
@@ -47,6 +51,7 @@ function firstRender() {
          <td><button class="btn cancel-btn hidden">Cancel</button></td>
         `
     }
+    reArrangeButtonsEvents()
 }
 
 function render(array) {
@@ -69,6 +74,29 @@ function render(array) {
     }
 }
 
+function reArrangeButtonsEvents(){
+    //! get all btns
+
+     editBtn = document.querySelectorAll(`.edit-btn`)
+     removeBtn = document.querySelectorAll(`.remove-btn`)
+     confirmBtn = document.querySelectorAll(`.confirm-btn`)
+     cancelBtn = document.querySelectorAll(`.cancel-btn`)
+
+     //! remove previous event
+
+     editBtn.forEach((e)=>{e.removeEventListener(`click`,edit)})
+     removeBtn.forEach((e)=>{e.removeEventListener(`click`,remove)})
+     confirmBtn.forEach((e)=>{e.removeEventListener(`click`,confirm)})
+     cancelBtn.forEach((e)=>{e.removeEventListener(`click`,cancel)})
+
+     //! add event listener properly
+
+     editBtn.forEach((e)=>{e.addEventListener(`click`,edit)})
+     removeBtn.forEach((e)=>{e.addEventListener(`click`,remove)})
+     confirmBtn.forEach((e)=>{e.addEventListener(`click`,confirm)})
+     cancelBtn.forEach((e)=>{e.addEventListener(`click`,cancel)})
+
+}
 const endpoint = `https://apple-seeds.herokuapp.com/api/users/`;
 fetchData(endpoint)
 let responseUser;
@@ -79,14 +107,22 @@ searchBox.addEventListener(`keyup`, search);
 const whatSearch = document.querySelector(`.what-search`);
 whatSearch.addEventListener(`click`, displayGenderSelect)
 const toolBar = document.querySelector(`.tool-bar`)
+const genderOption = document.querySelector(`.gender-select`)
+let editBtn;
+let removeBtn;
+let confirmBtn;
+let cancelBtn;
+
+
+
 const state = {
     bigData: [],
     myData: [],
     newData: [],
     whatSearchValue: null,
     valueSearchFor: null,
+    personBeforeEdit: null,
 }
-const genderOption = document.querySelector(`.gender-select`)
 
 function search(e) {
     table.innerHTML = ``
@@ -124,12 +160,11 @@ function search(e) {
 
 function displayGenderSelect() {
     //! case gender
-    debugger
     console.log(`triggerd`)
     state.whatSearchValue = whatSearch.value
     if (state.whatSearchValue === `gender`) {
         genderOption.classList.remove(`hidden`)
-    }else{
+    } else {
         genderOption.classList.add(`hidden`)
     }
     toolBar.children[2].addEventListener(`change`, (e) => {
@@ -144,4 +179,76 @@ function displayGenderSelect() {
         }
         render(state.newData);
     })
+}
+
+function edit(e) {
+
+    state.personBeforeEdit = state.myData[Number(e.path[2].children[0].textContent)];
+    const personAfterEdit = e.path[2];
+    //! display the hidden buttons
+    personAfterEdit.children[8].classList.add(`hidden`);
+    personAfterEdit.children[9].classList.add(`hidden`);
+    personAfterEdit.children[10].children[0].classList.remove(`hidden`);
+    personAfterEdit.children[11].children[0].classList.remove(`hidden`);
+    //! make text boxes with the person value in it as default 
+    for (let i = 1; i < 8; i++) {
+        personAfterEdit.children[i].innerHTML = `<input type="text" value="${personAfterEdit.children[i].textContent}">`
+    }
+    //! rest of the function is confirm function
+    reArrangeButtonsEvents()
+}
+
+function remove(e) {
+    const idToRemove = Number(e.path[2].children[0].textContent);
+    const personToRemove = state.myData.find((e) => {
+        return e.id === idToRemove
+    })
+    const indexOfPersonToRemove = state.myData.indexOf(personToRemove);
+    state.myData.splice(indexOfPersonToRemove, 1)
+    firstRender()
+    reArrangeButtonsEvents()
+}
+
+function confirm(e) {
+    //! take the element with the text boxes
+    const personAfterEdit = e.path[2]
+    //! initiallize the new person in the state and in database
+    state.personBeforeEdit.firstName = personAfterEdit.children[1].children[0].value;
+    state.personBeforeEdit.lastName = personAfterEdit.children[2].children[0].value;
+    state.personBeforeEdit.capsule = personAfterEdit.children[3].children[0].value;
+    state.personBeforeEdit.userData.age = personAfterEdit.children[4].children[0].value;
+    state.personBeforeEdit.userData.city = personAfterEdit.children[5].children[0].value;
+    state.personBeforeEdit.userData.gender = personAfterEdit.children[6].children[0].value;
+    state.personBeforeEdit.userData.hobby = personAfterEdit.children[7].children[0].value;
+    //! update my data
+    state.myData[Number(personAfterEdit.children[0])] = state.personBeforeEdit;
+    //! render the new person in the table 
+    renderSingleTr(state.personBeforeEdit.id,e.path[2].rowIndex)
+    reArrangeButtonsEvents()
+}
+
+function renderSingleTr(id,tr) {
+    //! i can user my firstRender(), but it render the whole table.
+    //! i prefere to make new fun that can render single line for performence issue :))
+    table.children[tr].innerHTML = `
+         <td>${state.myData[id].id}</td>
+         <td>${state.myData[id].firstName}</td> 
+         <td>${state.myData[id].lastName}</td>
+         <td>${state.myData[id].capsule}</td>
+         <td>${state.myData[id].userData.age}</td>
+         <td>${state.myData[id].userData.city}</td>
+         <td>${state.myData[id].userData.gender}</td>
+         <td>${state.myData[id].userData.hobby}</td>
+         <td><button class="btn edit-btn">Edit</button></td>
+         <td><button class="btn remove-btn">Remove</button></td>
+         <td><button class="btn confirm-btn hidden">Confirm</button></td>
+         <td><button class="btn cancel-btn hidden">Cancel</button></td>
+    `
+    reArrangeButtonsEvents()
+   
+}
+
+function cancel(e) {
+    renderSingleTr(state.personBeforeEdit.id,e.path[2].rowIndex)
+    reArrangeButtonsEvents()
 }
