@@ -1,4 +1,37 @@
 const loader = document.querySelector(`.loader`)
+const endpoint = `https://apple-seeds.herokuapp.com/api/users/`;
+// const weatherAPI = `api.openweathermap.org/data/2.5/weather?q=${city},il&appid=048cf05d5a16956290a72ef3a60c4db3`
+const city = [];
+fetchData(endpoint)
+// fetchData()
+let responseUser;
+let userData;
+const table = document.querySelector(`.appleseeds-table`);
+const searchBox = document.querySelector(`.search-box`);
+searchBox.addEventListener(`keyup`, search);
+const whatSearch = document.querySelector(`.what-search`);
+whatSearch.addEventListener(`click`, displayGenderSelect)
+const toolBar = document.querySelector(`.tool-bar`)
+const genderOption = document.querySelector(`.gender-select`)
+let editBtn;
+let removeBtn;
+let confirmBtn;
+let cancelBtn;
+let tableHeadings;
+
+//*mission:
+//!style
+//!wheather API
+
+
+const state = {
+    bigData: [],
+    myData: [],
+    newData: [],
+    whatSearchValue: null,
+    valueSearchFor: null,
+    personBeforeEdit: null,
+}
 
 async function fetchData(url) {
     console.time(`check`)
@@ -25,16 +58,17 @@ async function fetchData(url) {
 function firstRender() {
     table.innerHTML = `
     <tr>
-    <th>ID</th>
-    <th>First Name</th>
-    <th>Last Name</th>
-    <th>Capsule</th>
-    <th>Age</th>
-    <th>City</th>
-    <th>Gender</th>
-    <th>Hobby</th>
+    <th><p data-value="id" class="table-heading">ID <i data-value="id" class="arrow down"></i></p></th>
+    <th><p data-value="firstName" class="table-heading">First Name <i data-value="firstName" class="arrow down"></i></p></th>
+    <th><p data-value="lastName" class="table-heading">Last Name <i data-value="lastName" class="arrow down"></i></p></th>
+    <th><p data-value="capsule" class="table-heading">Capsule <i data-value="capsule" class="arrow down"></i></p></th>
+    <th><p data-value="age" class="table-heading">Age <i data-value="age" class="arrow down"></i></p></th>
+    <th><p data-value="city" class="table-heading">City <i data-value="city" class="arrow down"></i></p></th>
+    <th><p data-value="gender" class="table-heading">Gender <i data-value="gender" class="arrow down"></i></p></th>
+    <th><p data-value="hobby" class="table-heading">Hobby <i data-value="hobby" class="arrow down"></i></p></th>
     </tr>
     `
+
     for (let i = 0; i < state.myData.length; i++) {
         table.innerHTML += `
          <td>${state.myData[i].id}</td>
@@ -58,70 +92,90 @@ function render(array) {
 
     for (let i = 0; i < state.newData.length; i++) {
         table.innerHTML += `
-         <td>${state.newData[i].id}</td>
-         <td>${state.newData[i].firstName}</td> 
-         <td>${state.newData[i].lastName}</td>
-         <td>${state.newData[i].capsule}</td>
-         <td>${state.newData[i].userData.age}</td>
-         <td>${state.newData[i].userData.city}</td>
-         <td>${state.newData[i].userData.gender}</td>
-         <td>${state.newData[i].userData.hobby}</td>
+        <td>${state.newData[i].id}</td>
+        <td>${state.newData[i].firstName}</td> 
+        <td>${state.newData[i].lastName}</td>
+        <td>${state.newData[i].capsule}</td>
+        <td>${state.newData[i].userData.age}</td>
+        <td>${state.newData[i].userData.city}</td>
+        <td>${state.newData[i].userData.gender}</td>
+        <td>${state.newData[i].userData.hobby}</td>
+        <td><button class="btn edit-btn">Edit</button></td>
+        <td><button class="btn remove-btn">Remove</button></td>
+        <td><button class="btn confirm-btn hidden">Confirm</button></td>
+        <td><button class="btn cancel-btn hidden">Cancel</button></td>
+        `
+    }
+}
+
+function renderSingleTr(id, tr) {
+    //! i can user my firstRender(), but it render the whole table.
+    //! i prefere to make new fun that can render single line for performence issue :))
+    table.children[tr].innerHTML = `
+         <td>${state.myData[id].id}</td>
+         <td>${state.myData[id].firstName}</td> 
+         <td>${state.myData[id].lastName}</td>
+         <td>${state.myData[id].capsule}</td>
+         <td>${state.myData[id].userData.age}</td>
+         <td>${state.myData[id].userData.city}</td>
+         <td>${state.myData[id].userData.gender}</td>
+         <td>${state.myData[id].userData.hobby}</td>
          <td><button class="btn edit-btn">Edit</button></td>
          <td><button class="btn remove-btn">Remove</button></td>
          <td><button class="btn confirm-btn hidden">Confirm</button></td>
          <td><button class="btn cancel-btn hidden">Cancel</button></td>
     `
-    }
+    reArrangeButtonsEvents()
+
 }
 
-function reArrangeButtonsEvents(){
+function reArrangeButtonsEvents() {
     //! get all btns
 
-     editBtn = document.querySelectorAll(`.edit-btn`)
-     removeBtn = document.querySelectorAll(`.remove-btn`)
-     confirmBtn = document.querySelectorAll(`.confirm-btn`)
-     cancelBtn = document.querySelectorAll(`.cancel-btn`)
+    editBtn = document.querySelectorAll(`.edit-btn`)
+    removeBtn = document.querySelectorAll(`.remove-btn`)
+    confirmBtn = document.querySelectorAll(`.confirm-btn`)
+    cancelBtn = document.querySelectorAll(`.cancel-btn`)
 
-     //! remove previous event
+    //! remove previous event
 
-     editBtn.forEach((e)=>{e.removeEventListener(`click`,edit)})
-     removeBtn.forEach((e)=>{e.removeEventListener(`click`,remove)})
-     confirmBtn.forEach((e)=>{e.removeEventListener(`click`,confirm)})
-     cancelBtn.forEach((e)=>{e.removeEventListener(`click`,cancel)})
+    editBtn.forEach((e) => {
+        e.removeEventListener(`click`, edit)
+    })
+    removeBtn.forEach((e) => {
+        e.removeEventListener(`click`, remove)
+    })
+    confirmBtn.forEach((e) => {
+        e.removeEventListener(`click`, confirm)
+    })
+    cancelBtn.forEach((e) => {
+        e.removeEventListener(`click`, cancel)
+    })
 
-     //! add event listener properly
+    //! add event listener properly
 
-     editBtn.forEach((e)=>{e.addEventListener(`click`,edit)})
-     removeBtn.forEach((e)=>{e.addEventListener(`click`,remove)})
-     confirmBtn.forEach((e)=>{e.addEventListener(`click`,confirm)})
-     cancelBtn.forEach((e)=>{e.addEventListener(`click`,cancel)})
+    editBtn.forEach((e) => {
+        e.addEventListener(`click`, edit)
+    })
+    removeBtn.forEach((e) => {
+        e.addEventListener(`click`, remove)
+    })
+    confirmBtn.forEach((e) => {
+        e.addEventListener(`click`, confirm)
+    })
+    cancelBtn.forEach((e) => {
+        e.addEventListener(`click`, cancel)
+    })
 
-}
-const endpoint = `https://apple-seeds.herokuapp.com/api/users/`;
-fetchData(endpoint)
-let responseUser;
-let userData;
-const table = document.querySelector(`.appleseeds-table`);
-const searchBox = document.querySelector(`.search-box`);
-searchBox.addEventListener(`keyup`, search);
-const whatSearch = document.querySelector(`.what-search`);
-whatSearch.addEventListener(`click`, displayGenderSelect)
-const toolBar = document.querySelector(`.tool-bar`)
-const genderOption = document.querySelector(`.gender-select`)
-let editBtn;
-let removeBtn;
-let confirmBtn;
-let cancelBtn;
+    //! handling the sort options 
+    tableHeadings = document.querySelectorAll(`.table-heading`)
+    for (let p of tableHeadings) {
+        p.removeEventListener(`click`, sort)
+    }
+    for (let p of tableHeadings) {
+        p.addEventListener(`click`, sort)
+    }
 
-
-
-const state = {
-    bigData: [],
-    myData: [],
-    newData: [],
-    whatSearchValue: null,
-    valueSearchFor: null,
-    personBeforeEdit: null,
 }
 
 function search(e) {
@@ -181,8 +235,82 @@ function displayGenderSelect() {
     })
 }
 
-function edit(e) {
+function sort(e) {
+    //gender works hobby works city works
+    // id bug
 
+    state.newData = []
+    const sortBy = e.target.dataset.value;
+    console.log(sortBy);
+    if (sortBy == `id` || sortBy == `capsule` || sortBy == `firstName` || sortBy == `lastName`) {
+        state.newData = state.myData.sort((a, b) => {
+            if (sortBy == `firstName` || sortBy == `lastName`) {
+                const name1 = a[sortBy].toLowerCase()
+                const name2 = b[sortBy].toLowerCase()
+                if (name1 < name2) {
+                    return -1;
+                }
+                if (name1 > name2) {
+                    return 1;
+                }
+                return 0;
+            } else {
+                return a[sortBy] - b[sortBy];
+            }
+        })
+    } else if (sortBy == `age` || sortBy == `gender` || sortBy == `city` || sortBy == `hobby`) {
+        state.newData = state.myData.sort((a, b) => {
+            if (sortBy == `gender` || sortBy == `city` || sortBy == `hobby`) {
+                const name1 = a.userData[sortBy].toLowerCase();
+                const name2 = b.userData[sortBy].toLowerCase();
+                if (name1 < name2) {
+                    return -1;
+                }
+                if (name1 > name2) {
+                    return 1;
+                }
+                return 0;
+            } else {
+                return a.userData[sortBy] - b.userData[sortBy];
+            };
+        })
+    }
+    table.innerHTML = `
+    <tr>
+    <th><p data-value="id" class="table-heading">ID <i data-value="id" class="arrow down"></i></p></th>
+    <th><p data-value="firstName" class="table-heading">First Name <i data-value="firstName" class="arrow down"></i></p></th>
+    <th><p data-value="lastName" class="table-heading">Last Name <i data-value="lastName" class="arrow down"></i></p></th>
+    <th><p data-value="capsule" class="table-heading">Capsule <i data-value="capsule" class="arrow down"></i></p></th>
+    <th><p data-value="age" class="table-heading">Age <i data-value="age" class="arrow down"></i></p></th>
+    <th><p data-value="city" class="table-heading">City <i data-value="city" class="arrow down"></i></p></th>
+    <th><p data-value="gender" class="table-heading">Gender <i data-value="gender" class="arrow down"></i></p></th>
+    <th><p data-value="hobby" class="table-heading">Hobby <i data-value="hobby" class="arrow down"></i></p></th>
+    </tr>
+    `
+    render(state.newData);
+    reArrangeButtonsEvents();
+
+}
+let helper
+
+function alphaOnly(e, inputBox) {
+    debugger
+    const myReg = new RegExp("[0-9-*~`!@#$%^&*()-=+]");
+    inputBox.readOnly = true; //cancel the options to write and remove cursor
+    const key = e.key;
+    if (myReg.test(key)) {
+        //! invalid letter are exist 
+        for (let i = 0; i < inputBox.value.length; i++) {
+            //! iterate over the string and replace characters
+            if (myReg.test(inputBox.value[i])) {
+                inputBox.value = inputBox.value.replace(inputBox.value[i], ``) 
+            }
+        }
+    }
+    inputBox.readOnly = false; //return the option to write and the cursor
+}
+
+function edit(e) {
     state.personBeforeEdit = state.myData[Number(e.path[2].children[0].textContent)];
     const personAfterEdit = e.path[2];
     //! display the hidden buttons
@@ -192,7 +320,20 @@ function edit(e) {
     personAfterEdit.children[11].children[0].classList.remove(`hidden`);
     //! make text boxes with the person value in it as default 
     for (let i = 1; i < 8; i++) {
-        personAfterEdit.children[i].innerHTML = `<input type="text" value="${personAfterEdit.children[i].textContent}">`
+        if (i === 3 || i === 4) {
+            personAfterEdit.children[i].innerHTML = `<input type="number" value="${personAfterEdit.children[i].textContent}">`
+        } else if (i === 6) {
+            personAfterEdit.children[i].innerHTML = `
+             <select class="gender-select">
+            <option value="" disabled selected hidden>Choose a Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="B">B</option>
+            </select>
+            `
+        } else {
+            personAfterEdit.children[i].innerHTML = `<input onkeyup=alphaOnly(event,this) type="text" value="${personAfterEdit.children[i].textContent}">`
+        }
     }
     //! rest of the function is confirm function
     reArrangeButtonsEvents()
@@ -210,6 +351,7 @@ function remove(e) {
 }
 
 function confirm(e) {
+    debugger
     //! take the element with the text boxes
     const personAfterEdit = e.path[2]
     //! initiallize the new person in the state and in database
@@ -220,35 +362,23 @@ function confirm(e) {
     state.personBeforeEdit.userData.city = personAfterEdit.children[5].children[0].value;
     state.personBeforeEdit.userData.gender = personAfterEdit.children[6].children[0].value;
     state.personBeforeEdit.userData.hobby = personAfterEdit.children[7].children[0].value;
+    state.personBeforeEdit.id = Number(personAfterEdit.children[0].textContent);
     //! update my data
-    state.myData[Number(personAfterEdit.children[0])] = state.personBeforeEdit;
+    let idToUpdate = state.myData.find((e) => {
+        return e.id === state.personBeforeEdit.id
+    }) //id want to update
+    idToUpdate = idToUpdate.id
+    const indexOfPersonToUpdate = state.myData.forEach((e, i) => {
+        return e.id === idToUpdate ? i : null;
+    }) //index of the person to update in my data
+    state.myData[indexOfPersonToUpdate] = state.personBeforeEdit; //!wrong set need find by id (find)
     //! render the new person in the table 
-    renderSingleTr(state.personBeforeEdit.id,e.path[2].rowIndex)
+    renderSingleTr(indexOfPersonToUpdate, e.path[2].rowIndex)
     reArrangeButtonsEvents()
 }
 
-function renderSingleTr(id,tr) {
-    //! i can user my firstRender(), but it render the whole table.
-    //! i prefere to make new fun that can render single line for performence issue :))
-    table.children[tr].innerHTML = `
-         <td>${state.myData[id].id}</td>
-         <td>${state.myData[id].firstName}</td> 
-         <td>${state.myData[id].lastName}</td>
-         <td>${state.myData[id].capsule}</td>
-         <td>${state.myData[id].userData.age}</td>
-         <td>${state.myData[id].userData.city}</td>
-         <td>${state.myData[id].userData.gender}</td>
-         <td>${state.myData[id].userData.hobby}</td>
-         <td><button class="btn edit-btn">Edit</button></td>
-         <td><button class="btn remove-btn">Remove</button></td>
-         <td><button class="btn confirm-btn hidden">Confirm</button></td>
-         <td><button class="btn cancel-btn hidden">Cancel</button></td>
-    `
-    reArrangeButtonsEvents()
-   
-}
 
 function cancel(e) {
-    renderSingleTr(state.personBeforeEdit.id,e.path[2].rowIndex)
+    renderSingleTr(state.personBeforeEdit.id, e.path[2].rowIndex)
     reArrangeButtonsEvents()
 }

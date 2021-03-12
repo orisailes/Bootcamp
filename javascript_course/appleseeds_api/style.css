@@ -1,7 +1,6 @@
-.appleseeds-table {
-    width: 50vw;
+body{
+    height: 97vh;
 }
-
 .hidden {
     display: none !important;
 }
@@ -11,7 +10,21 @@
 }
 
 .tool-bar {
-    display: block;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0.4rem;
+}
+.tool-bar select{
+    margin-left: 1rem;
+}
+
+.container{
+    border: 1px solid black;
+    width: 60vw;
+    margin: auto;
+    height: 100%;
+    overflow-y: scroll;
 }
 
 .lds-facebook {
@@ -64,4 +77,26 @@ table input {
 
 table td {
     padding: 0.3rem;
+}
+
+.arrow {
+    border: solid black;
+    border-width: 0 3px 3px 0;
+    display: inline-block;
+    padding: 3px;
+}
+
+
+.down {
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+}
+
+table th {
+    width: 10vw;
+}
+
+table th p {
+    display: contents;
+    cursor: pointer;
 }
