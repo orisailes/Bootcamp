@@ -1,9 +1,6 @@
 const loader = document.querySelector(`.loader`)
 const endpoint = `https://apple-seeds.herokuapp.com/api/users/`;
-// const weatherAPI = `api.openweathermap.org/data/2.5/weather?q=${city},il&appid=048cf05d5a16956290a72ef3a60c4db3`
-const city = [];
 fetchData(endpoint)
-// fetchData()
 let responseUser;
 let userData;
 const table = document.querySelector(`.appleseeds-table`);
@@ -19,10 +16,6 @@ let confirmBtn;
 let cancelBtn;
 let tableHeadings;
 
-//*mission:
-//!style
-//!wheather API
-
 
 const state = {
     bigData: [],
@@ -31,6 +24,7 @@ const state = {
     whatSearchValue: null,
     valueSearchFor: null,
     personBeforeEdit: null,
+    weatherData: [],
 }
 
 async function fetchData(url) {
@@ -49,6 +43,7 @@ async function fetchData(url) {
             capsule: state.bigData[0][i].capsule,
             id: state.bigData[0][i].id,
         })
+        state.weatherData.push(userData.city)
     }
     firstRender()
     loader.classList.add(`hidden`)
@@ -88,10 +83,26 @@ function firstRender() {
     reArrangeButtonsEvents()
 }
 
-function render(array) {
+function clearTable() {
+    table.innerHTML =
+        `
+    <tr>
+    <th><p data-value="id" class="table-heading">ID <i data-value="id" class="arrow down"></i></p></th>
+    <th><p data-value="firstName" class="table-heading">First Name <i data-value="firstName" class="arrow down"></i></p></th>
+    <th><p data-value="lastName" class="table-heading">Last Name <i data-value="lastName" class="arrow down"></i></p></th>
+    <th><p data-value="capsule" class="table-heading">Capsule <i data-value="capsule" class="arrow down"></i></p></th>
+    <th><p data-value="age" class="table-heading">Age <i data-value="age" class="arrow down"></i></p></th>
+    <th><p data-value="city" class="table-heading">City <i data-value="city" class="arrow down"></i></p></th>
+    <th><p data-value="gender" class="table-heading">Gender <i data-value="gender" class="arrow down"></i></p></th>
+    <th><p data-value="hobby" class="table-heading">Hobby <i data-value="hobby" class="arrow down"></i></p></th>
+    </tr>
+    `
+}
 
+function render(array) {
     for (let i = 0; i < state.newData.length; i++) {
-        table.innerHTML += `
+        table.innerHTML +=
+            `
         <td>${state.newData[i].id}</td>
         <td>${state.newData[i].firstName}</td> 
         <td>${state.newData[i].lastName}</td>
@@ -179,7 +190,7 @@ function reArrangeButtonsEvents() {
 }
 
 function search(e) {
-    table.innerHTML = ``
+    clearTable()
     state.whatSearchValue = searchBox.value.toLowerCase(); // input value
     state.valueSearchFor = whatSearch.value; //dropdown value
     //!search for fname, lname,capsule,
@@ -189,7 +200,6 @@ function search(e) {
         for (let person of state.myData) {
             if (person[state.valueSearchFor].toString().toLowerCase().includes(state.whatSearchValue)) {
                 state.newData = [];
-                console.log(person)
                 state.newData.push(person)
                 render(state.newData)
             }
@@ -202,24 +212,23 @@ function search(e) {
         for (let person of state.myData) {
             if (person.userData[state.valueSearchFor].toString().toLowerCase().includes(state.whatSearchValue)) {
                 state.newData = [];
-                console.log(person)
                 state.newData.push(person)
                 render(state.newData)
             }
         }
     }
-
-
+    reArrangeButtonsEvents()
 }
 
 function displayGenderSelect() {
     //! case gender
-    console.log(`triggerd`)
     state.whatSearchValue = whatSearch.value
     if (state.whatSearchValue === `gender`) {
+        searchBox.disabled = true;
         genderOption.classList.remove(`hidden`)
     } else {
         genderOption.classList.add(`hidden`)
+        searchBox.disabled = false;
     }
     toolBar.children[2].addEventListener(`change`, (e) => {
         state.whatSearchValue = e.target.value;
@@ -227,21 +236,19 @@ function displayGenderSelect() {
         table.innerHTML = ``;
         for (let person of state.myData) {
             if (person.userData.gender === state.whatSearchValue) {
-                console.log(person)
                 state.newData.push(person)
             }
         }
+        clearTable()
         render(state.newData);
+        searchBox.disabled = false;
     })
 }
 
 function sort(e) {
-    //gender works hobby works city works
-    // id bug
-
+    clearTable()
     state.newData = []
     const sortBy = e.target.dataset.value;
-    console.log(sortBy);
     if (sortBy == `id` || sortBy == `capsule` || sortBy == `firstName` || sortBy == `lastName`) {
         state.newData = state.myData.sort((a, b) => {
             if (sortBy == `firstName` || sortBy == `lastName`) {
@@ -275,26 +282,13 @@ function sort(e) {
             };
         })
     }
-    table.innerHTML = `
-    <tr>
-    <th><p data-value="id" class="table-heading">ID <i data-value="id" class="arrow down"></i></p></th>
-    <th><p data-value="firstName" class="table-heading">First Name <i data-value="firstName" class="arrow down"></i></p></th>
-    <th><p data-value="lastName" class="table-heading">Last Name <i data-value="lastName" class="arrow down"></i></p></th>
-    <th><p data-value="capsule" class="table-heading">Capsule <i data-value="capsule" class="arrow down"></i></p></th>
-    <th><p data-value="age" class="table-heading">Age <i data-value="age" class="arrow down"></i></p></th>
-    <th><p data-value="city" class="table-heading">City <i data-value="city" class="arrow down"></i></p></th>
-    <th><p data-value="gender" class="table-heading">Gender <i data-value="gender" class="arrow down"></i></p></th>
-    <th><p data-value="hobby" class="table-heading">Hobby <i data-value="hobby" class="arrow down"></i></p></th>
-    </tr>
-    `
     render(state.newData);
     reArrangeButtonsEvents();
 
 }
-let helper
+
 
 function alphaOnly(e, inputBox) {
-    debugger
     const myReg = new RegExp("[0-9-*~`!@#$%^&*()-=+]");
     inputBox.readOnly = true; //cancel the options to write and remove cursor
     const key = e.key;
@@ -303,7 +297,7 @@ function alphaOnly(e, inputBox) {
         for (let i = 0; i < inputBox.value.length; i++) {
             //! iterate over the string and replace characters
             if (myReg.test(inputBox.value[i])) {
-                inputBox.value = inputBox.value.replace(inputBox.value[i], ``) 
+                inputBox.value = inputBox.value.replace(inputBox.value[i], ``)
             }
         }
     }
@@ -351,7 +345,6 @@ function remove(e) {
 }
 
 function confirm(e) {
-    debugger
     //! take the element with the text boxes
     const personAfterEdit = e.path[2]
     //! initiallize the new person in the state and in database

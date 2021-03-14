@@ -1,12 +1,73 @@
-body{
-    height: 97vh;
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400&display=swap');
+
+:root {
+    --myBlue: #273B7B
 }
+
+::placeholder {
+    color: snow;
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+}
+
+body {
+    height: 97vh;
+    background: snow;
+}
+
+.logo {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    display: inline-flex;
+    position: relative;
+    left: 40vw;
+    height: 18vh;
+    margin-top: 0.4rem;
+}
+
+.logo img {
+    height: 15vh;
+}
+
 .hidden {
     display: none !important;
 }
 
+.container {
+    width: 70vw;
+    margin: auto;
+    height: 80%;
+    overflow-y: scroll;
+    margin-top: 1rem;
+    border-bottom: 2px solid var(--myBlue);
+    border-top: 2px solid var(--myBlue);
+    background: snow;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.10),
+        0px 10px 20px rgba(0, 0, 0, 0.05),
+        0px 20px 20px rgba(0, 0, 0, 0.05),
+        0px 30px 20px rgba(0, 0, 0, 0.05);
+}
+
 .btn {
     display: inline;
+    transition-duration: 0.4s;
+    padding: 0.2rem 0.8rem;
+    border: 1px solid var(--myBlue);
+    border-radius: 3px;
+    background: transparent;
+}
+
+.btn:hover {
+    cursor: pointer;
+    background-color: var(--myBlue);
+    color: white;
 }
 
 .tool-bar {
@@ -15,23 +76,40 @@ body{
     align-items: center;
     margin: 0.4rem;
 }
-.tool-bar select{
-    margin-left: 1rem;
+
+.tool-bar .search-box {
+    background: var(--myBlue);
+    color: snow;
+    border: none;
+    padding: 0.5rem;
+    font-size: 1rem;
+    border-radius: 20px;
 }
 
-.container{
-    border: 1px solid black;
-    width: 60vw;
-    margin: auto;
-    height: 100%;
-    overflow-y: scroll;
+.tool-bar .search-box:focus {
+    outline: none;
 }
+
+
+
+.tool-bar select {
+    border-radius: 20px;
+    margin-left: 1rem;
+    border: none;
+    background: var(--myBlue);
+    color: snow;
+    padding: 0.5rem;
+    font-size: 1rem;
+}
+
 
 .lds-facebook {
     display: inline-block;
     position: relative;
     width: 80px;
     height: 80px;
+    left: 48%;
+    top: 20%;
 }
 
 .lds-facebook div {
@@ -39,7 +117,7 @@ body{
     position: absolute;
     left: 8px;
     width: 16px;
-    background: black;
+    background: var(--myBlue);
     animation: lds-facebook 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
 }
 
@@ -71,19 +149,14 @@ body{
     }
 }
 
-table input {
-    width: 100%;
-}
-
-table td {
-    padding: 0.3rem;
-}
-
 .arrow {
-    border: solid black;
+    border: solid #fff;
     border-width: 0 3px 3px 0;
     display: inline-block;
     padding: 3px;
+    position: relative;
+    bottom: 2px;
+    left: 5px;
 }
 
 
@@ -92,11 +165,47 @@ table td {
     -webkit-transform: rotate(45deg);
 }
 
+table {
+    margin: 1rem;
+    text-align: center;
+
+}
+
+table input {
+    width: 100%;
+}
+
+table td {
+    padding: 0.3rem;
+    color: #555;
+}
+
+
 table th {
     width: 10vw;
+    color: #3c3c3c;
+    border: 1px solid #eee;
+    padding: 0.5rem;
+    border-collapse: collapse;
+    background: var(--myBlue);
+    color: floralwhite;
+    text-transform: uppercase;
+    font-size: 0.8rem;
 }
 
 table th p {
     display: contents;
     cursor: pointer;
+
+}
+
+
+
+tr:hover {
+    background: #f4f4f4;
+}
+
+
+th tr {
+    margin: 0.2rem;
 }
