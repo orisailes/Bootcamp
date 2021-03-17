@@ -1,5 +1,4 @@
 import React from 'react'
-import './CoustomButton.css'
 
 class myBtn extends React.Component {
     state = {
