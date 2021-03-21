@@ -1,19 +1,24 @@
 import React from 'react'
-import MyData from './components/MyData'
-import './components/mydata.css'
 
-class App extends React.Component {
-    state = {}
 
+class app extends React.Component {
+    constructor(props) {
+        super(props);
+        this.myInput = React.createRef()
+    }
+    componentDidMount = () => {
+        this.myInput.focus()
+    }
+    
 
 
     render() {
         return (
-            <div className="container">
-                <MyData />
+            <div>
+                <input type="text" ref={ref => this.myInput = ref} />
             </div>
         )
     }
 }
 
-export default App;
+export default app
